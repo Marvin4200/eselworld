@@ -75,7 +75,7 @@ export const LANDS: Land[] = [
     subtitle: "Minecraft · GTA · Shooter · Spiele",
     icon: "🎮",
     worldX: 362,
-    worldY: 335,
+    worldY: 251,
     worldScale: WORLD_SCALE,
     shape: LAND_SHAPES["gaming-lands"],
     theme: {
@@ -93,7 +93,7 @@ export const LANDS: Land[] = [
     subtitle: "Technologie · Programmierung · KI",
     icon: "💻",
     worldX: 898,
-    worldY: 201,
+    worldY: 212,
     worldScale: WORLD_SCALE,
     shape: LAND_SHAPES["tech-valley"],
     theme: {
@@ -111,7 +111,7 @@ export const LANDS: Land[] = [
     subtitle: "FiveM · Roleplay · Storys",
     icon: "🎭",
     worldX: 1434,
-    worldY: 338,
+    worldY: 307,
     worldScale: WORLD_SCALE,
     shape: LAND_SHAPES["roleplay-realm"],
     theme: {
@@ -128,8 +128,8 @@ export const LANDS: Land[] = [
     name: "Music Island",
     subtitle: "Musik · Künstler · Streams",
     icon: "🎵",
-    worldX: 218,
-    worldY: 673,
+    worldX: 221,
+    worldY: 684,
     worldScale: WORLD_SCALE,
     shape: LAND_SHAPES["music-island"],
     theme: {
@@ -147,7 +147,7 @@ export const LANDS: Land[] = [
     subtitle: "Turniere · Teams · Wettbewerbe",
     icon: "🏆",
     worldX: 1533,
-    worldY: 683,
+    worldY: 714,
     worldScale: WORLD_SCALE,
     shape: LAND_SHAPES["esports-arena"],
     theme: {
@@ -164,8 +164,8 @@ export const LANDS: Land[] = [
     name: "Car District",
     subtitle: "Autos · Tuning · Motorsport",
     icon: "🚗",
-    worldX: 343,
-    worldY: 1059,
+    worldX: 273,
+    worldY: 1120,
     worldScale: WORLD_SCALE,
     shape: LAND_SHAPES["car-district"],
     theme: {
@@ -182,8 +182,8 @@ export const LANDS: Land[] = [
     name: "Creative Zone",
     subtitle: "Design · Kunst · Content",
     icon: "🎨",
-    worldX: 735,
-    worldY: 1145,
+    worldX: 717,
+    worldY: 1125,
     worldScale: WORLD_SCALE,
     shape: LAND_SHAPES["creative-zone"],
     theme: {
@@ -200,8 +200,8 @@ export const LANDS: Land[] = [
     name: "Entertainment",
     subtitle: "Memes · Talk · Unterhaltung",
     icon: "😂",
-    worldX: 1056,
-    worldY: 1145,
+    worldX: 1144,
+    worldY: 1132,
     worldScale: WORLD_SCALE,
     shape: LAND_SHAPES.entertainment,
     theme: {
