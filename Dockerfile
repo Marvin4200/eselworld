@@ -33,8 +33,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 # Schema + Migrationshistorie sowie die Prisma-CLI selbst (die Standalone-
-# Trace enthält nur den generierten Client, nicht das CLI-Paket).
+# Trace enthält nur den generierten Client, nicht das CLI-Paket). src/ wird
+# gebraucht, weil prisma/seed.ts beim Erststart per tsx direkt (nicht aus dem
+# kompilierten Next-Bundle) importiert wird — siehe seed-if-empty.ts.
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
