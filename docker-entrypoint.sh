@@ -2,6 +2,6 @@
 set -e
 
 echo "→ Running pending Prisma migrations..."
-npx prisma migrate deploy
+node node_modules/prisma/build/index.js migrate deploy
 
 exec "$@"
