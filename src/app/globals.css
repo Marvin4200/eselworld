@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #eef1f4;
+  --bg-raised: #ffffff;
+  --bg-sunken: #e3e7ed;
+  --ink: #1b2233;
+  --ink-soft: #4b5468;
+  --ink-faint: #7b8296;
+  --line: #d3d9e1;
+  --line-soft: #e3e7ed;
+  --accent: #b8792a;
+  --accent-ink: #7a4e17;
+  --accent-soft: #f3e2c9;
+  --teal: #1f7a6c;
+  --teal-soft: #dceeea;
+  --water-light: #56d6e0;
+  --water-deep: #1493b8;
+  --water-sparkle: #ffffff;
+  --land: #7bd47a;
+  --land-line: #3f9142;
+  --beach: #f6d77a;
+  --code-bg: #e7eaef;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12172b;
+    --bg-raised: #1a2038;
+    --bg-sunken: #0f1424;
+    --ink: #e7e9f2;
+    --ink-soft: #afb6cc;
+    --ink-faint: #7b84a0;
+    --line: #2c3350;
+    --line-soft: #232a45;
+    --accent: #e0a94b;
+    --accent-ink: #f4d9a6;
+    --accent-soft: #3a2e17;
+    --teal: #4cbba8;
+    --teal-soft: #16332e;
+    --water-light: #1c85a4;
+    --water-deep: #0a4258;
+    --water-sparkle: #bdeeff;
+    --land: #3e8b49;
+    --land-line: #245c2e;
+    --beach: #c9a24a;
+    --code-bg: #0f1424;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #12172b;
+  --bg-raised: #1a2038;
+  --bg-sunken: #0f1424;
+  --ink: #e7e9f2;
+  --ink-soft: #afb6cc;
+  --ink-faint: #7b84a0;
+  --line: #2c3350;
+  --line-soft: #232a45;
+  --accent: #e0a94b;
+  --accent-ink: #f4d9a6;
+  --accent-soft: #3a2e17;
+  --teal: #4cbba8;
+  --teal-soft: #16332e;
+  --water-light: #1c85a4;
+  --water-deep: #0a4258;
+  --water-sparkle: #bdeeff;
+  --land: #3e8b49;
+  --land-line: #245c2e;
+  --beach: #c9a24a;
+  --code-bg: #0f1424;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-bg-sunken: var(--bg-sunken);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-teal: var(--teal);
+  --color-teal-soft: var(--teal-soft);
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+/* ThemeToggle: rein CSS-gesteuerte Icon-Sichtbarkeit, kein React-State. */
+.theme-icon-to-light {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-icon-to-dark {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .theme-icon-to-light {
+    display: inline;
+  }
+}
+:root[data-theme="dark"] .theme-icon-to-dark {
+  display: none;
+}
+:root[data-theme="dark"] .theme-icon-to-light {
+  display: inline;
+}
+:root[data-theme="light"] .theme-icon-to-dark {
+  display: inline;
+}
+:root[data-theme="light"] .theme-icon-to-light {
+  display: none;
+}
+
+/* Kartenanimationen (Welt- & Land-Karte) — dezent, respektiert
+   prefers-reduced-motion über die globale Regel unten. */
+@keyframes map-pulse-glow {
+  0%,
+  100% {
+    opacity: 0.22;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.12);
+  }
+}
+@keyframes map-pulse-soft {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+@keyframes map-water-glimmer {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes map-cloud-drift {
+  from {
+    transform: translateX(-60px);
+  }
+  to {
+    transform: translateX(60px);
+  }
+}
+@keyframes map-road-flow {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+@keyframes map-lava-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+    r: 7;
+  }
+  50% {
+    opacity: 1;
+    r: 10;
+  }
+}
+
+.map-pulse-glow {
+  animation: map-pulse-glow 2.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.map-pulse-soft {
+  animation: map-pulse-soft 3.2s ease-in-out infinite;
+}
+.map-water-glimmer {
+  animation: map-water-glimmer 5s ease-in-out infinite;
+}
+.map-cloud-drift {
+  animation: map-cloud-drift 46s ease-in-out infinite alternate;
+}
+.map-cloud-drift-slow {
+  animation: map-cloud-drift 68s ease-in-out infinite alternate;
+}
+.map-road-flow {
+  animation: map-road-flow 1.6s linear infinite;
+}
+.map-lava-glow {
+  animation: map-lava-glow 2.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

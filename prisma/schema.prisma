@@ -1,0 +1,127 @@
+// EselWorld — Postgres-Schema für Produktion.
+generator client {
+  provider      = "prisma-client-js"
+  // "native" für lokale Dev-Umgebungen, der musl-Target für den
+  // Alpine-basierten Docker-Runtime-Stage (siehe Dockerfile).
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String      @id @default(cuid())
+  discordId   String      @unique
+  username    String      @unique
+  avatarEmoji String
+  bio         String?
+  // Profil-Personalisierung — rein kosmetisch, kein Feature-Flag.
+  accentColor String      @default("#1F7A6C")
+  website     String?
+  createdAt   DateTime    @default(now())
+  communities Community[] @relation("Owner")
+  alliances   Alliance[]
+  favorites   Favorite[]
+}
+
+model Category {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  icon        String
+  communities Community[]
+}
+
+enum CommunityStatus {
+  pending
+  approved
+  rejected
+}
+
+model Community {
+  id             String          @id @default(cuid())
+  discordGuildId String          @unique
+  name           String
+  slug           String          @unique
+  description    String
+  language       String
+  inviteUrl      String
+  iconEmoji      String
+  colorHex       String
+  memberCount    Int
+  activityLabel  String
+  growthPercent  Float
+  level          Int             @default(1)
+  // V2-Aktivitätssystem — noch ohne echten Bot, siehe simulateActivity.ts.
+  xpTotal        Float           @default(0)
+  currentStreak  Int             @default(0)
+  lastActiveDate DateTime?
+  status         CommunityStatus @default(pending)
+  // Index in das statische Kartenraster (src/lib/worldMap.ts) — wird erst
+  // bei der Freischaltung vergeben, siehe approveCommunityAction.
+  plotIndex      Int?            @unique
+  tags           String
+  categoryId     String
+  category       Category        @relation(fields: [categoryId], references: [id])
+  ownerId        String?
+  owner          User?           @relation("Owner", fields: [ownerId], references: [id])
+  allianceId     String?
+  alliance       Alliance?       @relation(fields: [allianceId], references: [id])
+  activityDaily  ActivityDaily[]
+  favoritedBy    Favorite[]
+  createdAt      DateTime        @default(now())
+  reviewedAt     DateTime?
+  reviewNotes    String?
+}
+
+// Merkliste: Nutzer können beliebige (auch fremde) Communities favorisieren —
+// unabhängig von Besitz oder Bündnis. Macht EselWorld nebenbei zur
+// Server-Suchliste mit Wiedervorlage statt nur Einmal-Discovery.
+model Favorite {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  communityId String
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  @@unique([userId, communityId])
+}
+
+// Ein Bündnis ist eine freiwillige Gruppe von Communities (V1: eine Community
+// gehört zu höchstens einem Bündnis). Kein Battle-/Territory-System — das ist
+// bewusst spätere Erweiterung (Blueprint V4). Hier zählt vorerst nur
+// Zugehörigkeit + aggregierte Kennzahlen auf der Bündnis-Seite.
+model Alliance {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  description String
+  icon        String
+  colorHex    String
+  ownerId     String
+  owner       User        @relation(fields: [ownerId], references: [id])
+  members     Community[]
+  createdAt   DateTime    @default(now())
+}
+
+// Ein Datensatz pro Community und (simuliertem oder echtem) Aktivitätstag.
+// Entspricht 1:1 der activity_daily-Tabelle aus dem Blueprint — der
+// Discord-Bot wird später hier dieselben Felder mit echten Werten schreiben.
+model ActivityDaily {
+  id                  String    @id @default(cuid())
+  communityId         String
+  community           Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  date                DateTime
+  uniqueActiveMembers Int
+  basePoints          Float
+  breadthBonus        Float
+  growthBonus         Float
+  streakMultiplier    Float
+  xpAwarded           Float
+  createdAt           DateTime  @default(now())
+
+  @@unique([communityId, date])
+}

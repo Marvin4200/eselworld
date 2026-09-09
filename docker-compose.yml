@@ -1,0 +1,45 @@
+name: eselworld
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-eselworld}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-eselworld}
+      POSTGRES_DB: ${POSTGRES_DB:-eselworld}
+    volumes:
+      - eselworld_postgres_data:/var/lib/postgresql/data
+    # Nur für lokalen Zugriff (psql, Prisma Studio) — kein öffentliches Bind.
+    ports:
+      - "127.0.0.1:5482:5432"
+    networks:
+      - eselworld_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-eselworld}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-eselworld}:${POSTGRES_PASSWORD:-eselworld}@postgres:5432/${POSTGRES_DB:-eselworld}
+    ports:
+      - "127.0.0.1:3150:3000"
+    networks:
+      - eselworld_internal
+
+networks:
+  eselworld_internal:
+    name: eselworld_internal
+
+volumes:
+  eselworld_postgres_data:
+    name: eselworld_postgres_data
