@@ -3,11 +3,9 @@ import { CATEGORY_COLORS } from "../src/lib/categoryColors";
 import { xpForLevel } from "../src/lib/activityFormula";
 import { LANDS } from "../src/lib/worldMap";
 
-const prisma = new PrismaClient();
-
 const daysAgo = (n: number) => new Date(Date.now() - n * 86_400_000);
 
-async function main() {
+export async function seedDemoData(prisma: PrismaClient) {
   console.log("Lösche vorhandene Daten…");
   await prisma.activityDaily.deleteMany();
   await prisma.alliance.deleteMany();
@@ -286,11 +284,16 @@ async function main() {
   console.log(`Fertig: ${LANDS.length} Länder, ${communities.length} Communities, 2 Bündnisse.`);
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+// Nur ausführen, wenn direkt per CLI gestartet (z. B. "npm run db:seed") —
+// nicht, wenn seedDemoData() aus seed-if-empty.ts importiert wird.
+if (require.main === module) {
+  const prisma = new PrismaClient();
+  seedDemoData(prisma)
+    .catch((e) => {
+      console.error(e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+}
